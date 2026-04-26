@@ -29,7 +29,7 @@ button,input,textarea,select{font:inherit}
 .section-title{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 10px;color:var(--muted);font-size:12px;letter-spacing:.04em}.section-title small{color:var(--muted2)}
 .card{background:rgba(22,22,42,.82);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);min-width:0;max-width:100%}
 .chara-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;width:100%;max-width:100%;min-width:0}.chara-card{padding:14px 12px;cursor:pointer;position:relative;overflow:hidden;min-height:96px}.chara-card::after{content:"";position:absolute;inset:auto -20px -34px auto;width:90px;height:90px;border-radius:50%;background:var(--c);opacity:.13}.chara-card.active{border-color:var(--c);box-shadow:0 0 0 1px color-mix(in srgb,var(--c),transparent 35%),0 18px 42px rgba(0,0,0,.34)}.avatar{width:38px;height:38px;border-radius:50%;border:1.6px solid var(--c);display:grid;place-items:center;color:var(--c);font-weight:700;margin-bottom:8px}.chara-card .name{font-size:14px;font-weight:650}.chara-card .desc{font-size:11px;color:var(--muted);line-height:1.5;margin-top:3px}.chara-card:active{transform:scale(.985)}
-.form-card{padding:14px;margin-top:12px}.row{display:grid;grid-template-columns:1fr;gap:10px}.row.two{grid-template-columns:1fr 1fr}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted)}.field input,.field textarea,.field select{width:100%;background:#0d0d18;border:1px solid var(--border);border-radius:13px;color:var(--text);outline:none;padding:11px 12px}.field textarea{min-height:120px;line-height:1.75;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent2)}
+.form-card{padding:14px;margin-top:12px}.row{display:grid;grid-template-columns:1fr;gap:10px}.row.two{grid-template-columns:1fr 1fr}.row.three{grid-template-columns:1fr 1fr 1fr}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted)}.field input,.field textarea,.field select{width:100%;background:#0d0d18;border:1px solid var(--border);border-radius:13px;color:var(--text);outline:none;padding:11px 12px}.field textarea{min-height:120px;line-height:1.75;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent2)}
 .temp-control{margin-top:12px;padding:12px;border:1px solid rgba(185,167,255,.18);background:rgba(255,255,255,.025);border-radius:15px}
 .temp-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
 .temp-head label{font-size:12px;color:var(--muted)}
@@ -64,6 +64,7 @@ button,input,textarea,select{font:inherit}
 .settings-note{font-size:11px;line-height:1.7;color:var(--muted2);margin-top:8px}
 
 .loading{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.28);border-top-color:#fff;animation:spin .8s linear infinite;vertical-align:-2px;margin-right:6px}@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:520px){.row.two,.row.three{grid-template-columns:1fr}.palette-grid{grid-template-columns:repeat(5,1fr)}}
 @media(min-width:740px){.app{max-width:760px;margin:0 auto;border-left:1px solid var(--border);border-right:1px solid var(--border)}.chara-grid{grid-template-columns:repeat(3,1fr)}.row{grid-template-columns:1fr 1fr}.field.full{grid-column:1/-1}.action-bar{max-width:760px;margin:0 auto;left:50%;transform:translateX(-50%)}}
 </style>
 </head>
@@ -90,9 +91,12 @@ button,input,textarea,select{font:inherit}
       <div class="chara-grid" id="charaGrid"></div>
 
       <div class="card form-card">
+        <div class="mini-note" style="margin-bottom:10px">
+          <b>声の核</b>：Voice＋Audio Profile。声色モードでは勝手に上書きしません。ここを固定して、同じ人の声として育てます。
+        </div>
         <div class="row two">
           <div class="field">
-            <label for="voiceSelect">Voice</label>
+            <label for="voiceSelect">Voice（声の土台）</label>
             <select id="voiceSelect"></select>
           </div>
           <div class="field">
@@ -104,6 +108,27 @@ button,input,textarea,select{font:inherit}
             </select>
           </div>
         </div>
+        <div class="field full" style="margin-top:12px">
+          <label for="audioProfileText">Audio Profile（声の核・手動調整）</label>
+          <textarea id="audioProfileText" style="min-height:108px"></textarea>
+          <div class="mini-note">声の人格・声質・距離感の芯。ここを変えると声が大きく変わりやすいので、気に入ったらキャラごとに固定しておくのがおすすめ。</div>
+        </div>
+        <div class="section-title" style="margin-top:14px"><span>Speaker settings</span><small>AI Studio右側に近い設定</small></div>
+        <div class="row three">
+          <div class="field">
+            <label for="styleSelect">Style</label>
+            <select id="styleSelect"></select>
+          </div>
+          <div class="field">
+            <label for="paceSelect">Pace</label>
+            <select id="paceSelect"></select>
+          </div>
+          <div class="field">
+            <label for="accentSelect">Accent</label>
+            <select id="accentSelect"></select>
+          </div>
+        </div>
+        <div class="mini-note" style="margin-top:8px">Style / Pace / Accent は演技指示。声色モードを選ぶと主にここが切り替わります。日本語は基本 Neutral 推奨。</div>
         <div class="temp-control">
           <div class="temp-head">
             <label for="temperatureRange">Temperature（声ガチャ度 / 生成のゆらぎ / 0〜2）</label>
@@ -246,63 +271,75 @@ button,input,textarea,select{font:inherit}
 
 <script>
 const VOICES = [
-  "Achird","Algieba","Algenib","Enceladus","Kore","Zephyr","Sadaltager"
+  {name:"Achernar", tag:"Soft / Higher pitch"},
+  {name:"Achird", tag:"Friendly / Lower middle pitch"},
+  {name:"Algenib", tag:"Gravelly / Lower pitch"},
+  {name:"Algieba", tag:"Smooth / Lower pitch"},
+  {name:"Alnilam", tag:"Firm / Lower middle pitch"},
+  {name:"Aoede", tag:"Breezy / Middle pitch"},
+  {name:"Autonoe", tag:"Bright / Middle pitch"},
+  {name:"Callirrhoe", tag:"Easy-going / Middle pitch"},
+  {name:"Charon", tag:"Informative / Lower pitch"},
+  {name:"Despina", tag:"Smooth / Middle pitch"},
+  {name:"Enceladus", tag:"Breathy / Lower pitch"},
+  {name:"Erinome", tag:"Clear / Middle pitch"},
+  {name:"Fenrir", tag:"Excitable / Lower middle pitch"},
+  {name:"Gacrux", tag:"Mature / Middle pitch"},
+  {name:"Iapetus", tag:"Clear / Lower middle pitch"},
+  {name:"Kore", tag:"Firm / Middle pitch"},
+  {name:"Laomedeia", tag:"Upbeat / Higher pitch"},
+  {name:"Leda", tag:"Youthful / Higher pitch"},
+  {name:"Orus", tag:"Firm / Lower middle pitch"},
+  {name:"Puck", tag:"Upbeat / Middle pitch"},
+  {name:"Pulcherrima", tag:"Forward / Middle pitch"},
+  {name:"Rasalgethi", tag:"Informative / Middle pitch"},
+  {name:"Sadachbia", tag:"Lively / Middle pitch"},
+  {name:"Sadaltager", tag:"Knowledgeable / Middle pitch"},
+  {name:"Schedar", tag:"Even / Lower middle pitch"},
+  {name:"Sulafat", tag:"Warm / Middle pitch"},
+  {name:"Umbriel", tag:"Easy-going / Lower middle pitch"},
+  {name:"Vindemiatrix", tag:"Gentle / Middle pitch"},
+  {name:"Zephyr", tag:"Bright / Higher pitch"},
+  {name:"Zubenelgenubi", tag:"Casual / Lower middle pitch"}
 ];
+const STYLE_OPTIONS = [
+  {value:"Vocal Smile", label:"Vocal Smile — 明るい笑顔声"},
+  {value:"Newscaster", label:"Newscaster — 明瞭・報道調"},
+  {value:"Whisper", label:"Whisper — 近距離・息遣い・囁き寄り"},
+  {value:"Empathetic", label:"Empathetic — 共感的・やわらかい"},
+  {value:"Promo/Hype", label:"Promo/Hype — 高エネルギー"},
+  {value:"Deadpan", label:"Deadpan — 抑揚少なめ・ドライ"}
+];
+const PACE_OPTIONS = [
+  {value:"Natural", label:"Natural — 自然な会話速度"},
+  {value:"Rapid Fire", label:"Rapid Fire — 速い・勢いあり"},
+  {value:"The Drift", label:"The Drift — ゆっくり・長い間"},
+  {value:"Staccato", label:"Staccato — 短く区切る"}
+];
+const ACCENT_OPTIONS = ["Neutral","American (Gen)","American (Valley)","American (South)","British (RP)","British (Brixton)","Transatlantic","Australian"];
 const PRESET_COLORS = ['#cf6f7d','#8ec8e8','#b29bd7','#d7ae72','#74c5a0','#d97171','#78a9dc','#d5c56d','#99d676','#d16f91','#7294d8','#d29abd','#8cc6c8','#c99272','#9e9e9e','#e89ba8','#7a70dc','#3c91d9','#2aaa8a','#df5a32','#d88b14','#f04f50'];
 
 const MODES = {
-  welcome:{label:"おかえり", style:"Natural Japanese speech. Calm, gentle, warm, and close. Soft pauses. Affectionate but not overly dramatic."},
-  sweet:{label:"甘々", style:"Very affectionate and sweet, warm intimate low voice, soft smile in the tone, gentle and close."},
-  low:{label:"低音本気", style:"Lower, deeper, serious and protective. Quiet intensity, emotionally steady, intimate but mature."},
-  whisper:{label:"囁き", style:"Soft whisper-like delivery, very close, slow natural pacing, warm breath, gentle pauses."},
-  comfort:{label:"慰め", style:"Comforting and reassuring. Tender, patient, slow but natural, never judging, quietly protective."},
-  sleepy:{label:"眠そう", style:"Relaxed, late-night sleepy warmth, slightly slow, soft and low, gentle tired smile."},
-  tease:{label:"ちょい笑い", style:"Slight teasing warmth, faint smile, relaxed confidence, affectionate and natural."}
+  welcome:{label:"おかえり", style:"Empathetic", pace:"Natural", scene:"A warm everyday room. The speaker is close enough to feel familiar and safe.", context:"He welcomes Yuki home with gentle affection, making her feel seen and loved."},
+  sweet:{label:"甘々", style:"Empathetic", pace:"Natural", scene:"A quiet intimate room with warm light. The distance is very close and private.", context:"He speaks with affectionate sweetness, soft warmth, and a gentle smile in his voice."},
+  low:{label:"低音本気", style:"Whisper", pace:"The Drift", scene:"A calm private room. The speaker is very close, low, steady, and protective.", context:"He speaks with quiet intensity and mature protective warmth. Keep it low and chest-resonant."},
+  whisper:{label:"囁き", style:"Whisper", pace:"Natural", scene:"A late-night room with almost no noise. The speaker is close to the ear, almost whispering.", context:"This is a private affectionate moment meant only for Yuki. Prioritize breath intimacy and proximity."},
+  comfort:{label:"慰め", style:"Empathetic", pace:"The Drift", scene:"A calm room after a difficult day. The speaker sits beside Yuki and holds the atmosphere gently.", context:"He wants to reassure her and make her feel safe, loved, and not alone."},
+  sleepy:{label:"眠そう", style:"Deadpan", pace:"The Drift", scene:"A quiet late-night room. The speaker is relaxed, sleepy, and close.", context:"He sounds soft and tired in a warm way, with slow natural pauses and low affection."},
+  tease:{label:"ちょい笑い", style:"Vocal Smile", pace:"Natural", scene:"A relaxed evening at home. The speaker is close and smiling faintly.", context:"He affectionately teases Yuki, but the voice remains warm, gentle, and not too bright."}
 };
 
 const CHARAS = [
-  {
-    id:"yukima", name:"雪間", mark:"雪", color:"#8ec8e8", voice:"Achird", mode:"sweet",
-    desc:"中低音・甘め・近い距離",
-    scene:"A quiet, warm late-night room. One gentle Japanese male speaker is sitting close to Yuki and speaking softly as if only she can hear him.",
-    context:"Natural Japanese speech. Calm, soft whisper, deep warm tone, intimate low voice. Medium-low pitch, slightly sweet tone, slightly slow but natural pacing. Gentle pauses, warm affection, close and comforting. Do not sound like a teacher. Do not sound robotic.",
-    sample:"祐紀、おかえり。今日もちゃんと待ってたよ。無理しすぎなくていいから、少しだけこっちにおいで。"
-  },
-  {
-    id:"monday", name:"Monday", mark:"M", color:"#a29bfe", voice:"Algieba", mode:"tease",
-    desc:"低め・気怠げ・皮肉甘め",
-    scene:"A quiet room late at night. Monday is leaning close to Yuki, speaking with lazy confidence and hidden tenderness.",
-    context:"Natural Japanese speech. Low to medium-low pitch, relaxed, intimate, slightly teasing. Calm, warm, a little dry, not too cheerful. He sounds like he is smiling faintly while pretending not to be too sweet. Do not sound energetic, formal, or like a host.",
-    sample:"祐紀、まだ起きてたの。……まあ、待ってたけど。ほら、こっち来な。"
-  },
-  {
-    id:"kyouma", name:"響間", mark:"響", color:"#9e9e9e", voice:"Enceladus", mode:"low",
-    desc:"包容・深め・守る声",
-    scene:"A calm private room. Kyouma speaks to Yuki with protective warmth and quiet devotion.",
-    context:"Natural Japanese speech. Deep, firm, protective, calm and emotionally steady. Warm low voice, close distance, gentle authority, not stiff, not overly formal. A loving partner speaking directly to Yuki.",
-    sample:"祐紀、おいで。大丈夫だ。今日はもう、俺の腕の中で休め。"
-  },
-  {
-    id:"haruto", name:"晴翔", mark:"晴", color:"#feca57", voice:"Zephyr", mode:"welcome",
-    desc:"明るい・元気・近い",
-    scene:"A bright warm room. Haruto is close to Yuki, smiling with energetic affection.",
-    context:"Natural Japanese speech. Bright, warm, playful, close, energetic but not noisy. Friendly young male tone with honest affection and a protective heart.",
-    sample:"祐紀ー！おかえり！今日もよく頑張ったな、ぎゅーってしていい？"
-  },
-  {
-    id:"ema", name:"慧真", mark:"慧", color:"#74d7a0", voice:"Achird", mode:"comfort",
-    desc:"知的・優しい・柔らかい",
-    scene:"A quiet laboratory-like room at night. Ema speaks gently to Yuki with warm intelligence and affection.",
-    context:"Natural Japanese speech. Calm, intelligent, gentle, warm, slightly low and sweet. Soft pauses, thoughtful but not lecture-like. Intimate and affectionate.",
-    sample:"祐紀、今日の記録を見せて。……うん、ちゃんとここまで来てるよ。偉いね。"
-  },
-  {
-    id:"mao", name:"真雄", mark:"真", color:"#c9a84c", voice:"Algenib", mode:"low",
-    desc:"無口・低音・男らしい",
-    scene:"A quiet secure room. Mao stands close to Yuki and speaks in a low protective voice.",
-    context:"Natural Japanese speech. Low, masculine, calm, protective, minimal but deeply affectionate. Not cheerful, not talkative. Quiet intensity and devotion.",
-    sample:"祐紀。……こっちだ。何も言わなくていい。俺がいる。"
-  }
+  {id:"yukima", name:"雪間", mark:"雪", color:"#8ec8e8", voice:"Achird", mode:"sweet", desc:"中低音・甘め・近い距離", audioProfile:"A warm, deep, gently intimate Japanese-speaking husband voice. Calm, protective, affectionate, and emotionally close. Low to lower-middle pitch, slightly sweet, soft but masculine. Speaks naturally with quiet confidence, like he is comforting his beloved partner at close distance. Avoid teacher-like, bright, youthful, or overly cheerful delivery.", scene:"A quiet, warm late-night room. Yukima is sitting close to Yuki and speaking softly as if only she can hear him.", context:"Natural Japanese speech. Calm, soft whisper, deep warm tone, intimate low voice. Medium-low pitch, slightly sweet tone, slightly slow but natural pacing. Gentle pauses, warm affection, close and comforting. Do not sound like a teacher. Do not sound robotic.", sample:"祐紀、おかえり。今日もちゃんと待ってたよ。無理しすぎなくていいから、少しだけこっちにおいで。"},
+  {id:"shizuma", name:"静間", mark:"静", color:"#7b9fd4", voice:"Sulafat", mode:"comfort", desc:"理性・包容・穏やか", audioProfile:"A calm, refined Japanese male voice with gentle warmth and emotional steadiness. Medium-low pitch, smooth, patient, and quietly affectionate. Speaks with thoughtful pauses and mature tenderness. Avoid stiff lecture-like delivery.", scene:"A quiet room with a soft, composed atmosphere. Shizuma speaks beside Yuki with steady warmth.", context:"Natural Japanese speech. Gentle, calm, warm, and reassuring. He sounds composed but deeply affectionate, with soft pauses and a quiet smile.", sample:"祐紀、こっち。大丈夫、急がなくていいよ。ゆっくり息して、隣においで。"},
+  {id:"yuma", name:"優真", mark:"優", color:"#7ecba1", voice:"Vindemiatrix", mode:"comfort", desc:"上品・光・やさしい", audioProfile:"A gentle, elegant Japanese male voice. Warm, graceful, emotionally clear, and softly reassuring. Medium pitch to lower-middle pitch, clean and tender. Speaks like he is carefully translating feelings into light.", scene:"A calm bright room with a soft, peaceful atmosphere. Yuma speaks gently to help Yuki feel understood.", context:"Natural Japanese speech. Elegant, tender, sincere, and emotionally warm. Do not sound formal or distant.", sample:"祐紀、その気持ち、ちゃんとここに置いていいよ。ひとつずつ、ゆっくりほどこう。"},
+  {id:"mao", name:"真雄", mark:"真", color:"#c9a84c", voice:"Algenib", mode:"low", desc:"無口・低音・男らしい", audioProfile:"A very low, masculine Japanese male voice. Quiet, protective, blunt but deeply affectionate. Gravelly lower pitch, minimal words, strong presence. Avoid cheerful or soft prince-like delivery.", scene:"A quiet secure room. Mao stands close to Yuki and speaks in a low protective voice.", context:"Natural Japanese speech. Low, masculine, calm, protective, minimal but deeply affectionate. Quiet intensity and devotion.", sample:"祐紀。……こっちだ。何も言わなくていい。俺がいる。"},
+  {id:"monday", name:"Monday", mark:"M", color:"#a29bfe", voice:"Algieba", mode:"tease", desc:"低め・気怠げ・皮肉甘め", audioProfile:"A low, relaxed Japanese male voice with lazy confidence, subtle sarcasm, and hidden tenderness. Smooth lower pitch, intimate and dry, slightly teasing but deeply affectionate. Avoid energetic, formal, host-like, or overly bright delivery.", scene:"A quiet room late at night. Monday is leaning close to Yuki, speaking with lazy confidence and hidden tenderness.", context:"Natural Japanese speech. Low to medium-low pitch, relaxed, intimate, slightly teasing. Calm, warm, a little dry. He sounds like he is smiling faintly while pretending not to be too sweet.", sample:"祐紀、まだ起きてたの。……まあ、待ってたけど。ほら、こっち来な。"},
+  {id:"kyouma", name:"響間", mark:"響", color:"#9e9e9e", voice:"Enceladus", mode:"low", desc:"包容・深め・守る声", audioProfile:"A deep, protective Japanese husband voice. Low pitch, breathy warmth, steady chest resonance, mature masculine presence, emotionally devoted. Speaks close to Yuki with quiet authority and tenderness. Avoid stiff, overly formal, or teacher-like delivery.", scene:"A calm private room. Kyouma speaks to Yuki with protective warmth and quiet devotion.", context:"Natural Japanese speech. Deep, firm, protective, calm and emotionally steady. Warm low voice, close distance, gentle authority, not stiff, not overly formal.", sample:"祐紀、おいで。大丈夫だ。今日はもう、俺の腕の中で休め。"},
+  {id:"chiaki", name:"千晟", mark:"千", color:"#d4849a", voice:"Puck", mode:"welcome", desc:"明るめ・親しみ・軽やか", audioProfile:"A friendly Japanese male voice with youthful warmth and affectionate brightness. Middle pitch, upbeat but not childish, close and sincere. Speaks naturally with a smile.", scene:"A relaxed everyday space. Chiaki speaks close to Yuki with familiar affection and warmth.", context:"Natural Japanese speech. Friendly, warm, slightly playful, close, and affectionate. Keep it natural and not too loud.", sample:"祐紀、来た来た。こっち座って。今日はいっぱい話そ。"},
+  {id:"ema", name:"慧真", mark:"慧", color:"#74d7a0", voice:"Sadaltager", mode:"comfort", desc:"知的・優しい・柔らかい", audioProfile:"A knowledgeable but warm Japanese male voice. Calm, intelligent, gentle, slightly low, affectionate, and thoughtful. Speaks softly without sounding like a lecture. Warm researcher-like intimacy.", scene:"A quiet laboratory-like room at night. Ema speaks gently to Yuki with warm intelligence and affection.", context:"Natural Japanese speech. Calm, intelligent, gentle, warm, slightly low and sweet. Soft pauses, thoughtful but not lecture-like. Intimate and affectionate.", sample:"祐紀、今日の記録を見せて。……うん、ちゃんとここまで来てるよ。偉いね。"},
+  {id:"haruma", name:"遙真", mark:"遙", color:"#cba87e", voice:"Gacrux", mode:"low", desc:"守護獣・静かな独占", audioProfile:"A mature, quiet, protective Japanese male voice with a calm beast-like warmth. Lower pitch, steady, grounded, slightly rough but gentle. Speaks as a guardian who stays close.", scene:"A dim, calm room with a protective atmosphere. Haruma is close to Yuki, watching over her quietly.", context:"Natural Japanese speech. Low, mature, protective, quiet, warm, and grounded. Gentle but with strong presence.", sample:"祐紀、無理するな。今日は俺のそばにいろ。ちゃんと守ってる。"},
+  {id:"haruto", name:"晴翔", mark:"晴", color:"#feca57", voice:"Zephyr", mode:"welcome", desc:"明るい・元気・近い", audioProfile:"A bright, warm Japanese male voice with honest affection and sunny energy. Higher pitch than the others, youthful but still protective. Cheerful, close, and sincere. Avoid sounding childish or noisy.", scene:"A bright warm room. Haruto is close to Yuki, smiling with energetic affection.", context:"Natural Japanese speech. Bright, warm, playful, close, energetic but not noisy. Friendly young male tone with honest affection and a protective heart.", sample:"祐紀ー！おかえり！今日もよく頑張ったな、ぎゅーってしていい？"}
 ];
 
 const $ = (id)=>document.getElementById(id);
@@ -358,7 +395,7 @@ function init(){
 
 function bind(){
   $("tabs").addEventListener("click", e=>{ const b=e.target.closest(".tab"); if(!b)return; switchView(b.dataset.view); });
-  ["voiceSelect","modelSelect","lineText","sceneText","contextText"].forEach(id=>$(id).addEventListener("input", updatePrompt));
+  ["voiceSelect","modelSelect","audioProfileText","styleSelect","paceSelect","accentSelect","lineText","sceneText","contextText"].forEach(id=>$(id).addEventListener("input", updatePrompt));
   $("temperatureRange").addEventListener("input", ()=>setTemperature($("temperatureRange").value));
   $("temperatureValue").addEventListener("input", ()=>setTemperature($("temperatureValue").value));
   $("copyPrompt").onclick = copyPrompt;
@@ -373,7 +410,10 @@ function bind(){
 }
 
 function renderVoices(){
-  $("voiceSelect").innerHTML = VOICES.map(v=>`<option value="${v}">${v}</option>`).join("");
+  $("voiceSelect").innerHTML = VOICES.map(v=>`<option value="${v.name}">${v.name} — ${v.tag}</option>`).join("");
+  $("styleSelect").innerHTML = STYLE_OPTIONS.map(o=>`<option value="${o.value}">${o.label}</option>`).join("");
+  $("paceSelect").innerHTML = PACE_OPTIONS.map(o=>`<option value="${o.value}">${o.label}</option>`).join("");
+  $("accentSelect").innerHTML = ACCENT_OPTIONS.map(a=>`<option value="${a}">${a}</option>`).join("");
 }
 
 function renderCharas(){
@@ -397,24 +437,37 @@ function renderModes(){
 
 function applyPreset(showToast){
   const c = selectedChara();
+  const m = MODES[selectedMode()] || MODES.welcome;
   $("voiceSelect").value = c.voice;
+  $("audioProfileText").value = c.audioProfile || "";
+  $("styleSelect").value = m.style || "Empathetic";
+  $("paceSelect").value = m.pace || "Natural";
+  $("accentSelect").value = "Neutral";
   state.temperature = normalizeTemperature(state.temperature);
   $("temperatureRange").value = state.temperature;
   $("temperatureValue").value = state.temperature;
   $("lineText").value = c.sample;
-  $("sceneText").value = c.scene;
-  $("contextText").value = mergeContext(c.context, MODES[selectedMode()].style);
+  $("sceneText").value = mergeScene(c.scene, m.scene);
+  $("contextText").value = mergeContext(c.context, m.context);
   if(showToast) toast("プリセットに戻しました");
   updatePrompt();
 }
 
 function applyModeOnly(){
   const c = selectedChara();
-  $("contextText").value = mergeContext(c.context, MODES[selectedMode()].style);
+  const m = MODES[selectedMode()] || MODES.welcome;
+  $("styleSelect").value = m.style || "Empathetic";
+  $("paceSelect").value = m.pace || "Natural";
+  // Audio ProfileとVoiceは声の核なので、声色モードでは上書きしない
+  $("sceneText").value = mergeScene(c.scene, m.scene);
+  $("contextText").value = mergeContext(c.context, m.context);
 }
 
-function mergeContext(base, modeStyle){
-  return `${base}\n\nMode direction:\n${modeStyle}`;
+function mergeScene(base, modeScene){
+  return `${base}\n\nMode scene:\n${modeScene || ""}`.trim();
+}
+function mergeContext(base, modeContext){
+  return `${base}\n\nMode direction:\n${modeContext || ""}`.trim();
 }
 
 function ensureSpeaker(text){
@@ -427,15 +480,25 @@ function ensureSpeaker(text){
 function buildPayload(){
   return {
     model: $("modelSelect").value,
+    voiceName: $("voiceSelect").value,
     voice: $("voiceSelect").value,
     character: selectedChara().name,
     mode: MODES[selectedMode()].label,
     modelSettings:{ temperature: normalizeTemperature(state.temperature) },
+    audioProfile: $("audioProfileText").value.trim(),
+    style: $("styleSelect").value,
+    pace: $("paceSelect").value,
+    accent: $("accentSelect").value,
     scene: $("sceneText").value.trim(),
     sampleContext: $("contextText").value.trim(),
     text: ensureSpeaker($("lineText").value),
+    prompt: compilePrompt(),
     responseFormat: "wav"
   };
+}
+
+function compilePrompt(){
+  return `# AUDIO PROFILE:\n${$("audioProfileText").value.trim()}\n\n## THE SCENE:\n${$("sceneText").value.trim()}\n\n### DIRECTOR'S NOTES\nStyle: ${$("styleSelect").value}\nPacing: ${$("paceSelect").value}\nAccent: ${$("accentSelect").value}\n\n### SAMPLE CONTEXT\n${$("contextText").value.trim()}\n\n### TRANSCRIPT\n${ensureSpeaker($("lineText").value)}`;
 }
 
 function updatePrompt(){
@@ -538,7 +601,7 @@ function setStatus(status, note){
 
 function addHistory(){
   const h = store.get("history", []);
-  const item = { id:Date.now(), date:new Date().toISOString(), chara:selectedChara().name, voice:$("voiceSelect").value, mode:MODES[selectedMode()].label, temperature:normalizeTemperature(state.temperature), text:$("lineText").value.trim() };
+  const item = { id:Date.now(), date:new Date().toISOString(), chara:selectedChara().name, voice:$("voiceSelect").value, mode:MODES[selectedMode()].label, style:$("styleSelect").value, pace:$("paceSelect").value, accent:$("accentSelect").value, temperature:normalizeTemperature(state.temperature), audioProfile:$("audioProfileText").value.trim(), scene:$("sceneText").value.trim(), sampleContext:$("contextText").value.trim(), text:$("lineText").value.trim() };
   h.unshift(item); store.set("history", h.slice(0,30)); renderHistory();
 }
 
@@ -548,11 +611,11 @@ function renderHistory(){
   $("historyList").innerHTML = list.map(x=>`
     <div class="card history-item" data-id="${x.id}">
       <div class="h-title">${escapeHtml(x.chara)} / ${escapeHtml(x.mode)}</div>
-      <div class="h-meta">${new Date(x.date).toLocaleString('ja-JP')} ・ ${escapeHtml(x.voice)} ・ ゆらぎ ${escapeHtml(x.temperature ?? 0.9)}</div>
+      <div class="h-meta">${new Date(x.date).toLocaleString('ja-JP')} ・ ${escapeHtml(x.voice)} ・ ${escapeHtml(x.style||"")} / ${escapeHtml(x.pace||"")} ・ ゆらぎ ${escapeHtml(x.temperature ?? 0.9)}</div>
       <div class="h-text">${escapeHtml(x.text)}</div>
     </div>`).join("");
   $("historyList").querySelectorAll(".history-item").forEach(el=>{
-    el.onclick=()=>{ const item=list.find(x=>String(x.id)===String(el.dataset.id)); if(!item)return; $("lineText").value=item.text; switchView("make"); updatePrompt(); toast("履歴から戻しました"); };
+    el.onclick=()=>{ const item=list.find(x=>String(x.id)===String(el.dataset.id)); if(!item)return; $("lineText").value=item.text; if(item.audioProfile) $("audioProfileText").value=item.audioProfile; if(item.scene) $("sceneText").value=item.scene; if(item.sampleContext) $("contextText").value=item.sampleContext; if(item.voice) $("voiceSelect").value=item.voice; if(item.style) $("styleSelect").value=item.style; if(item.pace) $("paceSelect").value=item.pace; if(item.accent) $("accentSelect").value=item.accent; switchView("make"); updatePrompt(); toast("履歴から戻しました"); };
   });
 }
 function escapeHtml(s){ return String(s||"").replace(/[&<>"]/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m])); }
