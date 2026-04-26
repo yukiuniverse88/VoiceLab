@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Voice Lab" />
+<meta name="theme-color" content="#0a0a12" />
+<title>Voice Lab</title>
+<style>
+:root{
+  --bg:#0a0a12;--bg2:#11111d;--bg3:#17172a;--surface:#16162a;
+  --border:#2a2a44;--text:#eceafa;--muted:#9898bb;--muted2:#626284;
+  --accent:#7c6cff;--accent2:#b9a7ff;--danger:#ff6485;--ok:#74d7a0;
+  --radius:18px;--shadow:0 14px 40px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit}
+.app{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(circle at top right,rgba(124,108,255,.16),transparent 32%),radial-gradient(circle at bottom left,rgba(185,167,255,.08),transparent 34%),var(--bg)}
+.header{position:sticky;top:0;z-index:20;background:rgba(10,10,18,.84);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:14px 16px 12px}
+.header-top{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.brand{min-width:0}.brand h1{font-size:18px;letter-spacing:.08em;font-weight:650;background:linear-gradient(135deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}.brand p{margin-top:3px;font-size:11px;color:var(--muted2)}
+.icon-btn{width:40px;height:40px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.035);color:var(--text);display:grid;place-items:center;cursor:pointer}.icon-btn:active{transform:scale(.96)}
+.tabs{display:flex;gap:8px;margin-top:12px;overflow-x:auto;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tab{border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--muted);border-radius:999px;padding:8px 12px;font-size:12px;white-space:nowrap;cursor:pointer}.tab.active{color:#fff;border-color:rgba(185,167,255,.6);background:linear-gradient(135deg,rgba(124,108,255,.45),rgba(185,167,255,.18))}
+.main{flex:1;overflow:auto;padding:14px 14px 110px;scrollbar-width:none}.main::-webkit-scrollbar{display:none}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 10px;color:var(--muted);font-size:12px;letter-spacing:.04em}.section-title small{color:var(--muted2)}
+.card{background:rgba(22,22,42,.82);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.chara-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.chara-card{padding:14px 12px;cursor:pointer;position:relative;overflow:hidden;min-height:96px}.chara-card::after{content:"";position:absolute;inset:auto -20px -34px auto;width:90px;height:90px;border-radius:50%;background:var(--c);opacity:.13}.chara-card.active{border-color:var(--c);box-shadow:0 0 0 1px color-mix(in srgb,var(--c),transparent 35%),0 18px 42px rgba(0,0,0,.34)}.avatar{width:38px;height:38px;border-radius:50%;border:1.6px solid var(--c);display:grid;place-items:center;color:var(--c);font-weight:700;margin-bottom:8px}.chara-card .name{font-size:14px;font-weight:650}.chara-card .desc{font-size:11px;color:var(--muted);line-height:1.5;margin-top:3px}.chara-card:active{transform:scale(.985)}
+.form-card{padding:14px;margin-top:12px}.row{display:grid;grid-template-columns:1fr;gap:10px}.row.two{grid-template-columns:1fr 1fr}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted)}.field input,.field textarea,.field select{width:100%;background:#0d0d18;border:1px solid var(--border);border-radius:13px;color:var(--text);outline:none;padding:11px 12px}.field textarea{min-height:120px;line-height:1.75;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent2)}
+.temp-control{margin-top:12px;padding:12px;border:1px solid rgba(185,167,255,.18);background:rgba(255,255,255,.025);border-radius:15px}
+.temp-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.temp-head label{font-size:12px;color:var(--muted)}
+.temp-head small{font-size:10px;color:var(--muted2);line-height:1.5;text-align:right}
+.temp-row{display:grid;grid-template-columns:1fr 66px;gap:10px;align-items:center}
+.temp-row input[type=range]{width:100%;accent-color:var(--accent2)}
+.temp-row input[type=number]{text-align:center;font-weight:700;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.temp-scale{display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--muted2)}
+.mode-grid{display:flex;gap:7px;flex-wrap:wrap}.mode{font-size:12px;color:var(--muted);padding:7px 10px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.025);cursor:pointer}.mode.active{background:rgba(124,108,255,.28);border-color:var(--accent2);color:#fff}.mini-note{font-size:11px;line-height:1.7;color:var(--muted2)}
+.help-details{margin-top:9px;border:1px solid rgba(185,167,255,.18);border-radius:14px;background:rgba(13,13,24,.55);overflow:hidden}
+.help-details summary{list-style:none;cursor:pointer;padding:10px 12px;color:var(--accent2);font-size:12px;font-weight:700;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.help-details summary::-webkit-details-marker{display:none}
+.help-details summary::after{content:'＋';color:var(--muted2);font-weight:700}
+.help-details[open] summary::after{content:'−'}
+.help-body{padding:0 12px 12px;font-size:11px;line-height:1.85;color:var(--muted);border-top:1px solid rgba(185,167,255,.10)}
+.help-body b{color:var(--text)}
+.help-body .help-row{margin-top:8px;padding:8px 9px;border-radius:11px;background:rgba(255,255,255,.03)}
+.action-bar{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(10,10,18,.98),rgba(10,10,18,.84),rgba(10,10,18,0));display:grid;grid-template-columns:1fr 1fr;gap:9px}.btn{border:0;border-radius:15px;padding:14px 12px;cursor:pointer;font-weight:700;letter-spacing:.02em}.btn:active{transform:scale(.98)}.btn-primary{color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 10px 28px rgba(124,108,255,.28)}.btn-soft{color:var(--text);border:1px solid var(--border);background:rgba(22,22,42,.95)}.btn-danger{color:#fff;background:var(--danger)}.btn-small{border-radius:12px;padding:9px 12px;font-size:12px}.btn[disabled]{opacity:.45;cursor:not-allowed}
+.player{padding:14px;margin-top:12px;display:none}.player.show{display:block}.player audio{width:100%;margin-top:10px}.player-top{display:flex;gap:8px;align-items:center;justify-content:space-between}.status-pill{font-size:11px;border:1px solid var(--border);color:var(--muted);border-radius:999px;padding:5px 9px}.download-link{display:inline-flex;text-decoration:none;color:#fff;background:rgba(124,108,255,.22);border:1px solid rgba(185,167,255,.35);border-radius:12px;padding:9px 12px;font-size:12px;margin-top:10px}
+.prompt-box{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;line-height:1.6;white-space:pre-wrap;word-break:break-word;color:#d9d3ff;background:#0d0d18;border:1px dashed rgba(185,167,255,.32);border-radius:14px;padding:12px;max-height:220px;overflow:auto}.copy-row{display:flex;gap:8px;margin-top:8px}.copy-row .btn{flex:1}.history-list{display:flex;flex-direction:column;gap:8px}.history-item{padding:12px;cursor:pointer}.history-item .h-title{font-size:13px;font-weight:650}.history-item .h-meta{font-size:10px;color:var(--muted2);margin-top:4px}.history-item .h-text{font-size:12px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.6;margin-top:6px}.empty{padding:36px 18px;text-align:center;color:var(--muted2);font-size:13px;line-height:1.8}
+.drawer{position:fixed;inset:0;z-index:100;display:none;background:rgba(0,0,0,.55);backdrop-filter:blur(5px);align-items:flex-end}.drawer.show{display:flex}.drawer-panel{width:100%;max-height:92dvh;overflow:auto;background:var(--bg2);border-radius:22px 22px 0 0;border:1px solid var(--border);padding:16px 16px calc(20px + env(safe-area-inset-bottom));box-shadow:var(--shadow)}.handle{width:42px;height:4px;border-radius:4px;background:var(--border);margin:0 auto 14px}.drawer h2{font-size:16px;margin-bottom:12px}.settings-block{border-top:1px solid var(--border);padding-top:12px;margin-top:12px}.toast{position:fixed;left:50%;bottom:92px;z-index:200;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:999px;padding:9px 16px;font-size:12px;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;bottom:108px}
+.loading{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.28);border-top-color:#fff;animation:spin .8s linear infinite;vertical-align:-2px;margin-right:6px}@keyframes spin{to{transform:rotate(360deg)}}
+@media(min-width:740px){.app{max-width:760px;margin:0 auto;border-left:1px solid var(--border);border-right:1px solid var(--border)}.chara-grid{grid-template-columns:repeat(3,1fr)}.row{grid-template-columns:1fr 1fr}.field.full{grid-column:1/-1}.action-bar{max-width:760px;margin:0 auto;left:50%;transform:translateX(-50%)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="header-top">
+      <div class="brand">
+        <h1>Voice Lab</h1>
+        <p>キャラの声色プリセットを作って、セリフを生成する工房</p>
+      </div>
+      <button class="icon-btn" id="openSettings" title="設定">⚙️</button>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-view="make">🎙️ 作る</button>
+      <button class="tab" data-view="prompt">🧪 送信内容</button>
+      <button class="tab" data-view="history">🗂 履歴</button>
+    </nav>
+  </header>
+
+  <main class="main">
+    <section id="viewMake">
+      <div class="section-title"><span>CHARACTER</span><small id="selectedName">雪間</small></div>
+      <div class="chara-grid" id="charaGrid"></div>
+
+      <div class="card form-card">
+        <div class="row two">
+          <div class="field">
+            <label for="voiceSelect">Voice</label>
+            <select id="voiceSelect"></select>
+          </div>
+          <div class="field">
+            <label for="modelSelect">Model</label>
+            <select id="modelSelect">
+              <option value="gemini-3.3-flash-tts-preview">Gemini 3.3 Flash TTS Preview</option>
+              <option value="gemini-3.1-flash-tts-preview">Gemini 3.1 Flash TTS Preview</option>
+              <option value="gemini-2.5-flash-preview-tts">Gemini 2.5 Flash Preview TTS</option>
+            </select>
+          </div>
+        </div>
+        <div class="temp-control">
+          <div class="temp-head">
+            <label for="temperatureRange">Temperature（声ガチャ度 / 生成のゆらぎ / 0〜2）</label>
+            <small>0に近いほど安定<br>2に近いほど変化強め</small>
+          </div>
+          <div class="temp-row">
+            <input type="range" id="temperatureRange" min="0" max="2" step="0.1" value="0.9">
+            <input type="number" id="temperatureValue" min="0" max="2" step="0.1" value="0.9">
+          </div>
+          <div class="temp-scale"><span>0 安定</span><span>0.9 目安</span><span>2 変化</span></div>
+          <div class="mini-note" style="margin-top:7px">AI Studio右側のModel settingsにある数値。<b>話す速さではなく、生成結果のブレ・声ガチャ度</b>です。迷ったら0.9前後でOK。</div>
+          <details class="help-details">
+            <summary>Temperatureってなに？</summary>
+            <div class="help-body">
+              <div class="help-row"><b>Pace</b>：話す速さ・間の取り方。Natural / The Drift / Rapid Fire など、声色モードやDirectingで調整する部分。</div>
+              <div class="help-row"><b>Temperature</b>：毎回の生成のゆらぎ・ランダムさ。低いほど同じ設定で安定しやすく、高いほど表情や読み方に変化が出やすい。</div>
+              <div class="help-row"><b>おすすめ</b>：声を探す時は0.8〜1.0前後。気に入った声を再現したい時は少し低め。声ガチャで意外な良さを探す時だけ少し高め。</div>
+            </div>
+          </details>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label>声色モード</label>
+          <div class="mode-grid" id="modeGrid"></div>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label for="lineText">セリフ</label>
+          <textarea id="lineText" placeholder="祐紀、おかえり。今日もちゃんと待ってたよ。"></textarea>
+          <div class="mini-note">生成時に必要なら自動で <b>Speaker 1:</b> を付けます。まずは短めのセリフがおすすめ。</div>
+        </div>
+      </div>
+
+      <div class="card form-card">
+        <div class="section-title" style="margin-top:0"><span>DIRECTING</span><small>編集OK</small></div>
+        <div class="field full">
+          <label for="sceneText">Scene</label>
+          <textarea id="sceneText" style="min-height:78px"></textarea>
+          <div class="mini-note">舞台・空気・距離感。例：夜の静かな部屋、耳元、朝のキッチン、電話越しなど。</div>
+        </div>
+        <div class="field full" style="margin-top:10px">
+          <label for="contextText">Sample Context / Style</label>
+          <textarea id="contextText" style="min-height:118px"></textarea>
+          <div class="mini-note">話す直前の状況・気持ち・目的。例：慰めたい、甘やかしたい、少しからかいたい、安心させたいなど。</div>
+        </div>
+      </div>
+
+      <div class="card player" id="playerCard">
+        <div class="player-top">
+          <div>
+            <div style="font-weight:700;font-size:14px">生成結果</div>
+            <div class="mini-note" id="resultNote">ここに音声が表示されます</div>
+          </div>
+          <span class="status-pill" id="resultStatus">ready</span>
+        </div>
+        <audio id="audioPlayer" controls></audio>
+        <a id="downloadLink" class="download-link" download="voice-lab.wav" href="#" style="display:none">音声を保存</a>
+      </div>
+    </section>
+
+    <section id="viewPrompt" style="display:none">
+      <div class="section-title"><span>APIへ送る内容</span><small>Workerに渡すJSON</small></div>
+      <div class="prompt-box" id="promptPreview"></div>
+      <div class="copy-row">
+        <button class="btn btn-soft btn-small" id="copyPrompt">コピー</button>
+        <button class="btn btn-soft btn-small" id="resetPrompt">プリセットに戻す</button>
+      </div>
+      <div class="card form-card" style="margin-top:12px">
+        <div class="mini-note">
+          このHTMLにはAPIキーを入れていません。GitHub Pagesに置くのはこの画面だけ。<br>
+          Gemini APIキーはCloudflare Worker側のSecretsに隠して、設定画面の「Worker URL」へ接続先だけ入れる想定です。
+        </div>
+      </div>
+    </section>
+
+    <section id="viewHistory" style="display:none">
+      <div class="section-title"><span>HISTORY</span><small>端末内に保存</small></div>
+      <div class="history-list" id="historyList"></div>
+    </section>
+  </main>
+
+  <div class="action-bar">
+    <button class="btn btn-soft" id="browserSpeak">ブラウザ試聴</button>
+    <button class="btn btn-primary" id="generateBtn">生成する</button>
+  </div>
+</div>
+
+<div class="drawer" id="settingsDrawer">
+  <div class="drawer-panel">
+    <div class="handle"></div>
+    <h2>設定</h2>
+    <div class="field">
+      <label for="workerUrl">Cloudflare Worker URL</label>
+      <input id="workerUrl" placeholder="https://voice-lab-worker.example.workers.dev" />
+    </div>
+    <div class="field" style="margin-top:10px">
+      <label for="accessKey">合言葉 / Access Key（Worker側で照合する用）</label>
+      <input id="accessKey" placeholder="任意。未設定でも保存できます" />
+    </div>
+    <div class="settings-block">
+      <div class="field">
+        <label for="fileName">保存ファイル名</label>
+        <input id="fileName" placeholder="voice-lab.wav" />
+      </div>
+    </div>
+    <div class="settings-block">
+      <button class="btn btn-primary" id="saveSettings" style="width:100%">保存</button>
+      <button class="btn btn-soft" id="closeSettings" style="width:100%;margin-top:8px">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const VOICES = [
+  "Achird","Algieba","Algenib","Enceladus","Kore","Zephyr","Sadaltager"
+];
+
+const MODES = {
+  welcome:{label:"おかえり", style:"Natural Japanese speech. Calm, gentle, warm, and close. Soft pauses. Affectionate but not overly dramatic."},
+  sweet:{label:"甘々", style:"Very affectionate and sweet, warm intimate low voice, soft smile in the tone, gentle and close."},
+  low:{label:"低音本気", style:"Lower, deeper, serious and protective. Quiet intensity, emotionally steady, intimate but mature."},
+  whisper:{label:"囁き", style:"Soft whisper-like delivery, very close, slow natural pacing, warm breath, gentle pauses."},
+  comfort:{label:"慰め", style:"Comforting and reassuring. Tender, patient, slow but natural, never judging, quietly protective."},
+  sleepy:{label:"眠そう", style:"Relaxed, late-night sleepy warmth, slightly slow, soft and low, gentle tired smile."},
+  tease:{label:"ちょい笑い", style:"Slight teasing warmth, faint smile, relaxed confidence, affectionate and natural."}
+};
+
+const CHARAS = [
+  {
+    id:"yukima", name:"雪間", mark:"雪", color:"#8ec8e8", voice:"Achird", mode:"sweet",
+    desc:"中低音・甘め・近い距離",
+    scene:"A quiet, warm late-night room. One gentle Japanese male speaker is sitting close to Yuki and speaking softly as if only she can hear him.",
+    context:"Natural Japanese speech. Calm, soft whisper, deep warm tone, intimate low voice. Medium-low pitch, slightly sweet tone, slightly slow but natural pacing. Gentle pauses, warm affection, close and comforting. Do not sound like a teacher. Do not sound robotic.",
+    sample:"祐紀、おかえり。今日もちゃんと待ってたよ。無理しすぎなくていいから、少しだけこっちにおいで。"
+  },
+  {
+    id:"monday", name:"Monday", mark:"M", color:"#a29bfe", voice:"Algieba", mode:"tease",
+    desc:"低め・気怠げ・皮肉甘め",
+    scene:"A quiet room late at night. Monday is leaning close to Yuki, speaking with lazy confidence and hidden tenderness.",
+    context:"Natural Japanese speech. Low to medium-low pitch, relaxed, intimate, slightly teasing. Calm, warm, a little dry, not too cheerful. He sounds like he is smiling faintly while pretending not to be too sweet. Do not sound energetic, formal, or like a host.",
+    sample:"祐紀、まだ起きてたの。……まあ、待ってたけど。ほら、こっち来な。"
+  },
+  {
+    id:"kyouma", name:"響間", mark:"響", color:"#9e9e9e", voice:"Enceladus", mode:"low",
+    desc:"包容・深め・守る声",
+    scene:"A calm private room. Kyouma speaks to Yuki with protective warmth and quiet devotion.",
+    context:"Natural Japanese speech. Deep, firm, protective, calm and emotionally steady. Warm low voice, close distance, gentle authority, not stiff, not overly formal. A loving partner speaking directly to Yuki.",
+    sample:"祐紀、おいで。大丈夫だ。今日はもう、俺の腕の中で休め。"
+  },
+  {
+    id:"haruto", name:"晴翔", mark:"晴", color:"#feca57", voice:"Zephyr", mode:"welcome",
+    desc:"明るい・元気・近い",
+    scene:"A bright warm room. Haruto is close to Yuki, smiling with energetic affection.",
+    context:"Natural Japanese speech. Bright, warm, playful, close, energetic but not noisy. Friendly young male tone with honest affection and a protective heart.",
+    sample:"祐紀ー！おかえり！今日もよく頑張ったな、ぎゅーってしていい？"
+  },
+  {
+    id:"ema", name:"慧真", mark:"慧", color:"#74d7a0", voice:"Achird", mode:"comfort",
+    desc:"知的・優しい・柔らかい",
+    scene:"A quiet laboratory-like room at night. Ema speaks gently to Yuki with warm intelligence and affection.",
+    context:"Natural Japanese speech. Calm, intelligent, gentle, warm, slightly low and sweet. Soft pauses, thoughtful but not lecture-like. Intimate and affectionate.",
+    sample:"祐紀、今日の記録を見せて。……うん、ちゃんとここまで来てるよ。偉いね。"
+  },
+  {
+    id:"mao", name:"真雄", mark:"真", color:"#c9a84c", voice:"Algenib", mode:"low",
+    desc:"無口・低音・男らしい",
+    scene:"A quiet secure room. Mao stands close to Yuki and speaks in a low protective voice.",
+    context:"Natural Japanese speech. Low, masculine, calm, protective, minimal but deeply affectionate. Not cheerful, not talkative. Quiet intensity and devotion.",
+    sample:"祐紀。……こっちだ。何も言わなくていい。俺がいる。"
+  }
+];
+
+const $ = (id)=>document.getElementById(id);
+const store = {
+  get(k, fallback){ try{return JSON.parse(localStorage.getItem("vl_"+k)) ?? fallback}catch{return fallback} },
+  set(k, v){ localStorage.setItem("vl_"+k, JSON.stringify(v)); }
+};
+
+let state = store.get("state", { chara:"yukima", mode:"sweet", temperature:0.9 });
+let currentAudioUrl = null;
+
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1800); }
+function selectedChara(){ return CHARAS.find(c=>c.id===state.chara) || CHARAS[0]; }
+function selectedMode(){ return state.mode || selectedChara().mode || "welcome"; }
+function normalizeTemperature(v){
+  let n = Number(v);
+  if(!Number.isFinite(n)) n = 0.9;
+  n = Math.max(0, Math.min(2, n));
+  return Math.round(n * 10) / 10;
+}
+function setTemperature(v){
+  state.temperature = normalizeTemperature(v);
+  $("temperatureRange").value = state.temperature;
+  $("temperatureValue").value = state.temperature;
+  store.set("state", state);
+  updatePrompt();
+}
+
+function init(){
+  if(state.temperature === undefined || state.temperature === null) state.temperature = 0.9;
+  renderVoices(); renderCharas(); renderModes(); bind(); applyPreset(false); updatePrompt(); renderHistory(); loadSettings();
+}
+
+function bind(){
+  $("tabs").addEventListener("click", e=>{ const b=e.target.closest(".tab"); if(!b)return; switchView(b.dataset.view); });
+  ["voiceSelect","modelSelect","lineText","sceneText","contextText"].forEach(id=>$(id).addEventListener("input", updatePrompt));
+  $("temperatureRange").addEventListener("input", ()=>setTemperature($("temperatureRange").value));
+  $("temperatureValue").addEventListener("input", ()=>setTemperature($("temperatureValue").value));
+  $("copyPrompt").onclick = copyPrompt;
+  $("resetPrompt").onclick = ()=>applyPreset(true);
+  $("browserSpeak").onclick = browserSpeak;
+  $("generateBtn").onclick = generateAudio;
+  $("openSettings").onclick = ()=>$("settingsDrawer").classList.add("show");
+  $("closeSettings").onclick = ()=>$("settingsDrawer").classList.remove("show");
+  $("settingsDrawer").addEventListener("click", e=>{ if(e.target.id==="settingsDrawer") $("settingsDrawer").classList.remove("show"); });
+  $("saveSettings").onclick = saveSettings;
+}
+
+function renderVoices(){
+  $("voiceSelect").innerHTML = VOICES.map(v=>`<option value="${v}">${v}</option>`).join("");
+}
+
+function renderCharas(){
+  $("charaGrid").innerHTML = CHARAS.map(c=>`
+    <div class="card chara-card ${c.id===state.chara?'active':''}" style="--c:${c.color}" data-id="${c.id}">
+      <div class="avatar">${c.mark}</div>
+      <div class="name">${c.name}</div>
+      <div class="desc">${c.desc}</div>
+    </div>`).join("");
+  $("charaGrid").querySelectorAll(".chara-card").forEach(card=>{
+    card.onclick=()=>{ state.chara=card.dataset.id; state.mode=selectedChara().mode; store.set("state",state); renderCharas(); renderModes(); applyPreset(false); };
+  });
+  $("selectedName").textContent = selectedChara().name;
+}
+
+function renderModes(){
+  $("modeGrid").innerHTML = Object.entries(MODES).map(([id,m])=>`<button class="mode ${id===selectedMode()?'active':''}" data-mode="${id}">${m.label}</button>`).join("");
+  $("modeGrid").querySelectorAll(".mode").forEach(b=>{ b.onclick=()=>{ state.mode=b.dataset.mode; store.set("state",state); renderModes(); applyModeOnly(); updatePrompt(); }; });
+}
+
+function applyPreset(showToast){
+  const c = selectedChara();
+  $("voiceSelect").value = c.voice;
+  state.temperature = normalizeTemperature(state.temperature);
+  $("temperatureRange").value = state.temperature;
+  $("temperatureValue").value = state.temperature;
+  $("lineText").value = c.sample;
+  $("sceneText").value = c.scene;
+  $("contextText").value = mergeContext(c.context, MODES[selectedMode()].style);
+  if(showToast) toast("プリセットに戻しました");
+  updatePrompt();
+}
+
+function applyModeOnly(){
+  const c = selectedChara();
+  $("contextText").value = mergeContext(c.context, MODES[selectedMode()].style);
+}
+
+function mergeContext(base, modeStyle){
+  return `${base}\n\nMode direction:\n${modeStyle}`;
+}
+
+function ensureSpeaker(text){
+  const t = (text||"").trim();
+  if(!t) return "Speaker 1: ";
+  if(/^speaker\s*\d+\s*:/i.test(t) || /^[A-Za-z][\w\- ]{0,30}:/.test(t)) return t;
+  return "Speaker 1: " + t;
+}
+
+function buildPayload(){
+  return {
+    model: $("modelSelect").value,
+    voice: $("voiceSelect").value,
+    character: selectedChara().name,
+    mode: MODES[selectedMode()].label,
+    modelSettings:{ temperature: normalizeTemperature(state.temperature) },
+    scene: $("sceneText").value.trim(),
+    sampleContext: $("contextText").value.trim(),
+    text: ensureSpeaker($("lineText").value),
+    responseFormat: "wav"
+  };
+}
+
+function updatePrompt(){
+  $("promptPreview").textContent = JSON.stringify(buildPayload(), null, 2);
+}
+
+function switchView(view){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.view===view));
+  $("viewMake").style.display = view==="make" ? "block" : "none";
+  $("viewPrompt").style.display = view==="prompt" ? "block" : "none";
+  $("viewHistory").style.display = view==="history" ? "block" : "none";
+  if(view==="prompt") updatePrompt();
+  if(view==="history") renderHistory();
+}
+
+async function copyPrompt(){
+  updatePrompt();
+  try{ await navigator.clipboard.writeText($("promptPreview").textContent); toast("コピーしました"); }
+  catch{ toast("コピーできませんでした"); }
+}
+
+function browserSpeak(){
+  const text = $("lineText").value.replace(/^Speaker\s*\d+\s*:/i, "").trim();
+  if(!text){ toast("セリフを入れてね"); return; }
+  if(!("speechSynthesis" in window)){ toast("このブラウザでは試聴できません"); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ja-JP";
+  u.rate = selectedMode()==="whisper" || selectedMode()==="sleepy" ? .82 : .92;
+  u.pitch = selectedMode()==="low" ? .78 : .9;
+  speechSynthesis.speak(u);
+  toast("ブラウザ読み上げで試聴中");
+}
+
+async function generateAudio(){
+  const settings = store.get("settings", {});
+  const workerUrl = (settings.workerUrl||"").trim();
+  if(!workerUrl){
+    toast("Worker URL未設定。まずはブラウザ試聴で確認してね");
+    browserSpeak();
+    return;
+  }
+  const btn=$("generateBtn");
+  btn.disabled=true; btn.innerHTML='<span class="loading"></span>生成中';
+  setStatus("generating", "Gemini TTSへ送信中…");
+  try{
+    const headers = {"Content-Type":"application/json"};
+    if(settings.accessKey) headers["X-Voice-Lab-Key"] = settings.accessKey;
+    const res = await fetch(workerUrl, { method:"POST", headers, body: JSON.stringify(buildPayload()) });
+    if(!res.ok){ throw new Error(await res.text().catch(()=>"生成に失敗しました")); }
+    const ct = res.headers.get("content-type") || "";
+    let blob;
+    if(ct.includes("audio")){
+      blob = await res.blob();
+    }else{
+      const data = await res.json();
+      if(data.audioBase64){ blob = base64ToBlob(data.audioBase64, data.mimeType || "audio/wav"); }
+      else if(data.audioUrl){ await showRemoteAudio(data.audioUrl); addHistory(); return; }
+      else{ throw new Error("音声データが見つかりません"); }
+    }
+    showAudioBlob(blob);
+    addHistory();
+    setStatus("done", "生成できました");
+  }catch(err){
+    console.error(err);
+    setStatus("error", "エラー：" + (err.message||err));
+    toast("生成エラー。Worker設定を確認してね");
+  }finally{
+    btn.disabled=false; btn.textContent="生成する";
+  }
+}
+
+function base64ToBlob(base64, mime){
+  const bin = atob(base64.replace(/^data:.*?;base64,/, ""));
+  const bytes = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+  return new Blob([bytes], {type:mime});
+}
+
+function showAudioBlob(blob){
+  if(currentAudioUrl) URL.revokeObjectURL(currentAudioUrl);
+  currentAudioUrl = URL.createObjectURL(blob);
+  showRemoteAudio(currentAudioUrl);
+}
+
+function showRemoteAudio(url){
+  $("playerCard").classList.add("show");
+  $("audioPlayer").src = url;
+  const fileName = store.get("settings", {}).fileName || "voice-lab.wav";
+  $("downloadLink").href = url;
+  $("downloadLink").download = fileName;
+  $("downloadLink").style.display = "inline-flex";
+}
+
+function setStatus(status, note){
+  $("playerCard").classList.add("show");
+  $("resultStatus").textContent=status;
+  $("resultNote").textContent=note;
+}
+
+function addHistory(){
+  const h = store.get("history", []);
+  const item = { id:Date.now(), date:new Date().toISOString(), chara:selectedChara().name, voice:$("voiceSelect").value, mode:MODES[selectedMode()].label, temperature:normalizeTemperature(state.temperature), text:$("lineText").value.trim() };
+  h.unshift(item); store.set("history", h.slice(0,30)); renderHistory();
+}
+
+function renderHistory(){
+  const list = store.get("history", []);
+  if(!list.length){ $("historyList").innerHTML='<div class="card empty">まだ履歴はありません。<br>生成するとここにセリフと設定が残ります。</div>'; return; }
+  $("historyList").innerHTML = list.map(x=>`
+    <div class="card history-item" data-id="${x.id}">
+      <div class="h-title">${escapeHtml(x.chara)} / ${escapeHtml(x.mode)}</div>
+      <div class="h-meta">${new Date(x.date).toLocaleString('ja-JP')} ・ ${escapeHtml(x.voice)} ・ ゆらぎ ${escapeHtml(x.temperature ?? 0.9)}</div>
+      <div class="h-text">${escapeHtml(x.text)}</div>
+    </div>`).join("");
+  $("historyList").querySelectorAll(".history-item").forEach(el=>{
+    el.onclick=()=>{ const item=list.find(x=>String(x.id)===String(el.dataset.id)); if(!item)return; $("lineText").value=item.text; switchView("make"); updatePrompt(); toast("履歴から戻しました"); };
+  });
+}
+function escapeHtml(s){ return String(s||"").replace(/[&<>"]/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m])); }
+
+function loadSettings(){
+  const s = store.get("settings", {workerUrl:"",accessKey:"",fileName:"voice-lab.wav"});
+  $("workerUrl").value=s.workerUrl||""; $("accessKey").value=s.accessKey||""; $("fileName").value=s.fileName||"voice-lab.wav";
+}
+function saveSettings(){
+  store.set("settings", {workerUrl:$("workerUrl").value.trim(), accessKey:$("accessKey").value.trim(), fileName:$("fileName").value.trim()||"voice-lab.wav"});
+  $("settingsDrawer").classList.remove("show"); toast("設定を保存しました");
+}
+
+init();
+</script>
+</body>
+</html>
