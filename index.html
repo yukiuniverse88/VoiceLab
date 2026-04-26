@@ -16,18 +16,19 @@
   --radius:18px;--shadow:0 14px 40px rgba(0,0,0,.28);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;-webkit-font-smoothing:antialiased}
+html,body{width:100%;max-width:100%;height:100%;overflow:hidden;overflow-x:hidden;overscroll-behavior-x:none;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;-webkit-font-smoothing:antialiased}
+body{position:fixed;inset:0;touch-action:pan-y}
 button,input,textarea,select{font:inherit}
-.app{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(circle at top right,rgba(124,108,255,.16),transparent 32%),radial-gradient(circle at bottom left,rgba(185,167,255,.08),transparent 34%),var(--bg)}
+.app{width:100%;max-width:100%;height:100dvh;display:flex;flex-direction:column;overflow:hidden;overflow-x:hidden;overscroll-behavior-x:none;background:radial-gradient(circle at top right,rgba(124,108,255,.16),transparent 32%),radial-gradient(circle at bottom left,rgba(185,167,255,.08),transparent 34%),var(--bg)}
 .header{position:sticky;top:0;z-index:20;background:rgba(10,10,18,.84);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:14px 16px 12px}
 .header-top{display:flex;align-items:center;gap:12px;justify-content:space-between}
 .brand{min-width:0}.brand h1{font-size:18px;letter-spacing:.08em;font-weight:650;background:linear-gradient(135deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}.brand p{margin-top:3px;font-size:11px;color:var(--muted2)}
 .icon-btn{width:40px;height:40px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.035);color:var(--text);display:grid;place-items:center;cursor:pointer}.icon-btn:active{transform:scale(.96)}
 .tabs{display:flex;gap:8px;margin-top:12px;overflow-x:auto;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tab{border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--muted);border-radius:999px;padding:8px 12px;font-size:12px;white-space:nowrap;cursor:pointer}.tab.active{color:#fff;border-color:rgba(185,167,255,.6);background:linear-gradient(135deg,rgba(124,108,255,.45),rgba(185,167,255,.18))}
-.main{flex:1;overflow:auto;padding:14px 14px 110px;scrollbar-width:none}.main::-webkit-scrollbar{display:none}
+.main{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior-x:none;padding:14px 14px 110px;scrollbar-width:none}.main::-webkit-scrollbar{display:none}
 .section-title{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 10px;color:var(--muted);font-size:12px;letter-spacing:.04em}.section-title small{color:var(--muted2)}
-.card{background:rgba(22,22,42,.82);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
-.chara-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.chara-card{padding:14px 12px;cursor:pointer;position:relative;overflow:hidden;min-height:96px}.chara-card::after{content:"";position:absolute;inset:auto -20px -34px auto;width:90px;height:90px;border-radius:50%;background:var(--c);opacity:.13}.chara-card.active{border-color:var(--c);box-shadow:0 0 0 1px color-mix(in srgb,var(--c),transparent 35%),0 18px 42px rgba(0,0,0,.34)}.avatar{width:38px;height:38px;border-radius:50%;border:1.6px solid var(--c);display:grid;place-items:center;color:var(--c);font-weight:700;margin-bottom:8px}.chara-card .name{font-size:14px;font-weight:650}.chara-card .desc{font-size:11px;color:var(--muted);line-height:1.5;margin-top:3px}.chara-card:active{transform:scale(.985)}
+.card{background:rgba(22,22,42,.82);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);min-width:0;max-width:100%}
+.chara-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;width:100%;max-width:100%;min-width:0}.chara-card{padding:14px 12px;cursor:pointer;position:relative;overflow:hidden;min-height:96px}.chara-card::after{content:"";position:absolute;inset:auto -20px -34px auto;width:90px;height:90px;border-radius:50%;background:var(--c);opacity:.13}.chara-card.active{border-color:var(--c);box-shadow:0 0 0 1px color-mix(in srgb,var(--c),transparent 35%),0 18px 42px rgba(0,0,0,.34)}.avatar{width:38px;height:38px;border-radius:50%;border:1.6px solid var(--c);display:grid;place-items:center;color:var(--c);font-weight:700;margin-bottom:8px}.chara-card .name{font-size:14px;font-weight:650}.chara-card .desc{font-size:11px;color:var(--muted);line-height:1.5;margin-top:3px}.chara-card:active{transform:scale(.985)}
 .form-card{padding:14px;margin-top:12px}.row{display:grid;grid-template-columns:1fr;gap:10px}.row.two{grid-template-columns:1fr 1fr}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted)}.field input,.field textarea,.field select{width:100%;background:#0d0d18;border:1px solid var(--border);border-radius:13px;color:var(--text);outline:none;padding:11px 12px}.field textarea{min-height:120px;line-height:1.75;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent2)}
 .temp-control{margin-top:12px;padding:12px;border:1px solid rgba(185,167,255,.18);background:rgba(255,255,255,.025);border-radius:15px}
 .temp-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
@@ -50,6 +51,18 @@ button,input,textarea,select{font:inherit}
 .player{padding:14px;margin-top:12px;display:none}.player.show{display:block}.player audio{width:100%;margin-top:10px}.player-top{display:flex;gap:8px;align-items:center;justify-content:space-between}.status-pill{font-size:11px;border:1px solid var(--border);color:var(--muted);border-radius:999px;padding:5px 9px}.download-link{display:inline-flex;text-decoration:none;color:#fff;background:rgba(124,108,255,.22);border:1px solid rgba(185,167,255,.35);border-radius:12px;padding:9px 12px;font-size:12px;margin-top:10px}
 .prompt-box{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;line-height:1.6;white-space:pre-wrap;word-break:break-word;color:#d9d3ff;background:#0d0d18;border:1px dashed rgba(185,167,255,.32);border-radius:14px;padding:12px;max-height:220px;overflow:auto}.copy-row{display:flex;gap:8px;margin-top:8px}.copy-row .btn{flex:1}.history-list{display:flex;flex-direction:column;gap:8px}.history-item{padding:12px;cursor:pointer}.history-item .h-title{font-size:13px;font-weight:650}.history-item .h-meta{font-size:10px;color:var(--muted2);margin-top:4px}.history-item .h-text{font-size:12px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.6;margin-top:6px}.empty{padding:36px 18px;text-align:center;color:var(--muted2);font-size:13px;line-height:1.8}
 .drawer{position:fixed;inset:0;z-index:100;display:none;background:rgba(0,0,0,.55);backdrop-filter:blur(5px);align-items:flex-end}.drawer.show{display:flex}.drawer-panel{width:100%;max-height:92dvh;overflow:auto;background:var(--bg2);border-radius:22px 22px 0 0;border:1px solid var(--border);padding:16px 16px calc(20px + env(safe-area-inset-bottom));box-shadow:var(--shadow)}.handle{width:42px;height:4px;border-radius:4px;background:var(--border);margin:0 auto 14px}.drawer h2{font-size:16px;margin-bottom:12px}.settings-block{border-top:1px solid var(--border);padding-top:12px;margin-top:12px}.toast{position:fixed;left:50%;bottom:92px;z-index:200;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:999px;padding:9px 16px;font-size:12px;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;bottom:108px}
+
+.color-preview{display:flex;align-items:center;gap:12px;margin-top:10px;padding:12px;border:1px solid rgba(185,167,255,.18);border-radius:16px;background:rgba(255,255,255,.025)}
+.color-orb{width:52px;height:52px;border-radius:50%;background:var(--pick);box-shadow:0 0 0 3px rgba(255,255,255,.06),0 0 24px color-mix(in srgb,var(--pick),transparent 70%);flex-shrink:0}
+.color-preview b{display:block;font-size:14px}.color-preview span{display:block;margin-top:2px;color:var(--muted2);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+.palette-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:10px}
+.color-dot{height:38px;border-radius:50%;border:2px solid transparent;background:var(--pick);cursor:pointer;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.color-dot.active{border-color:#fff;box-shadow:0 0 0 2px rgba(185,167,255,.45),0 0 18px color-mix(in srgb,var(--pick),transparent 55%)}
+.hex-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px}.hex-row input{text-transform:lowercase}
+.rgb-sliders{display:flex;flex-direction:column;gap:10px;margin-top:12px;padding:12px;border:1px solid rgba(185,167,255,.13);border-radius:16px;background:rgba(255,255,255,.02)}
+.rgb-line{display:grid;grid-template-columns:24px 1fr 42px;gap:8px;align-items:center}.rgb-line label{font-weight:800;font-size:12px}.rgb-line input[type=range]{width:100%;accent-color:var(--accent2)}.rgb-line output{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--muted);font-size:12px;text-align:right}
+.settings-note{font-size:11px;line-height:1.7;color:var(--muted2);margin-top:8px}
+
 .loading{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.28);border-top-color:#fff;animation:spin .8s linear infinite;vertical-align:-2px;margin-right:6px}@keyframes spin{to{transform:rotate(360deg)}}
 @media(min-width:740px){.app{max-width:760px;margin:0 auto;border-left:1px solid var(--border);border-right:1px solid var(--border)}.chara-grid{grid-template-columns:repeat(3,1fr)}.row{grid-template-columns:1fr 1fr}.field.full{grid-column:1/-1}.action-bar{max-width:760px;margin:0 auto;left:50%;transform:translateX(-50%)}}
 </style>
@@ -194,6 +207,34 @@ button,input,textarea,select{font:inherit}
         <input id="fileName" placeholder="voice-lab.wav" />
       </div>
     </div>
+
+    <div class="settings-block">
+      <h2 style="font-size:15px;margin-bottom:10px">キャラカラー</h2>
+      <div class="field">
+        <label for="colorCharaSelect">色を変えるキャラ</label>
+        <select id="colorCharaSelect"></select>
+      </div>
+      <div class="color-preview" id="colorPreview" style="--pick:#8ec8e8">
+        <div class="color-orb"></div>
+        <div><b id="colorPreviewName">雪間</b><span id="colorPreviewHex">#8ec8e8</span></div>
+      </div>
+      <div class="settings-note">キャラカードの名前色・丸アイコン・選択中カラーに反映されます。</div>
+      <div class="palette-grid" id="colorPalette"></div>
+      <div class="hex-row">
+        <input id="colorHex" maxlength="7" placeholder="#8ec8e8" />
+        <button class="btn btn-soft btn-small" id="applyHex">反映</button>
+      </div>
+      <div class="rgb-sliders">
+        <div class="rgb-line"><label style="color:#ff7c8a">R</label><input type="range" id="colorR" min="0" max="255"><output id="colorROut">142</output></div>
+        <div class="rgb-line"><label style="color:#74d7a0">G</label><input type="range" id="colorG" min="0" max="255"><output id="colorGOut">200</output></div>
+        <div class="rgb-line"><label style="color:#8aa8ff">B</label><input type="range" id="colorB" min="0" max="255"><output id="colorBOut">232</output></div>
+      </div>
+      <div class="copy-row" style="margin-top:10px">
+        <button class="btn btn-soft btn-small" id="resetColor">標準に戻す</button>
+        <button class="btn btn-primary btn-small" id="saveColor">色を保存</button>
+      </div>
+    </div>
+
     <div class="settings-block">
       <button class="btn btn-primary" id="saveSettings" style="width:100%">保存</button>
       <button class="btn btn-soft" id="closeSettings" style="width:100%;margin-top:8px">閉じる</button>
@@ -207,6 +248,7 @@ button,input,textarea,select{font:inherit}
 const VOICES = [
   "Achird","Algieba","Algenib","Enceladus","Kore","Zephyr","Sadaltager"
 ];
+const PRESET_COLORS = ['#cf6f7d','#8ec8e8','#b29bd7','#d7ae72','#74c5a0','#d97171','#78a9dc','#d5c56d','#99d676','#d16f91','#7294d8','#d29abd','#8cc6c8','#c99272','#9e9e9e','#e89ba8','#7a70dc','#3c91d9','#2aaa8a','#df5a32','#d88b14','#f04f50'];
 
 const MODES = {
   welcome:{label:"おかえり", style:"Natural Japanese speech. Calm, gentle, warm, and close. Soft pauses. Affectionate but not overly dramatic."},
@@ -270,11 +312,31 @@ const store = {
 };
 
 let state = store.get("state", { chara:"yukima", mode:"sweet", temperature:0.9 });
+let customColors = store.get("colors", {});
+let colorDraft = "#8ec8e8";
 let currentAudioUrl = null;
 
 function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1800); }
 function selectedChara(){ return CHARAS.find(c=>c.id===state.chara) || CHARAS[0]; }
 function selectedMode(){ return state.mode || selectedChara().mode || "welcome"; }
+
+function defaultColor(id){ const c=CHARAS.find(x=>x.id===id); return c ? c.color : '#8ec8e8'; }
+function colorFor(id){ return customColors[id] || defaultColor(id); }
+function normalizeHex(hex){
+  const m=/^#?([0-9a-fA-F]{6})$/.exec(String(hex||'').trim());
+  if(!m) return null;
+  return '#'+m[1].toLowerCase();
+}
+function hexToRgb(hex){
+  hex=normalizeHex(hex) || '#8ec8e8';
+  const n=parseInt(hex.slice(1),16);
+  return {r:(n>>16)&255,g:(n>>8)&255,b:n&255};
+}
+function rgbToHex(r,g,b){
+  return '#'+[r,g,b].map(v=>Math.max(0,Math.min(255,Number(v)||0)).toString(16).padStart(2,'0')).join('');
+}
+function activeColor(){ return colorFor(state.chara); }
+
 function normalizeTemperature(v){
   let n = Number(v);
   if(!Number.isFinite(n)) n = 0.9;
@@ -291,7 +353,7 @@ function setTemperature(v){
 
 function init(){
   if(state.temperature === undefined || state.temperature === null) state.temperature = 0.9;
-  renderVoices(); renderCharas(); renderModes(); bind(); applyPreset(false); updatePrompt(); renderHistory(); loadSettings();
+  renderVoices(); renderCharas(); renderModes(); bind(); applyPreset(false); updatePrompt(); renderHistory(); loadSettings(); renderColorSettings();
 }
 
 function bind(){
@@ -303,10 +365,11 @@ function bind(){
   $("resetPrompt").onclick = ()=>applyPreset(true);
   $("browserSpeak").onclick = browserSpeak;
   $("generateBtn").onclick = generateAudio;
-  $("openSettings").onclick = ()=>$("settingsDrawer").classList.add("show");
+  $("openSettings").onclick = openSettingsDrawer;
   $("closeSettings").onclick = ()=>$("settingsDrawer").classList.remove("show");
   $("settingsDrawer").addEventListener("click", e=>{ if(e.target.id==="settingsDrawer") $("settingsDrawer").classList.remove("show"); });
   $("saveSettings").onclick = saveSettings;
+  bindColorControls();
 }
 
 function renderVoices(){
@@ -315,7 +378,7 @@ function renderVoices(){
 
 function renderCharas(){
   $("charaGrid").innerHTML = CHARAS.map(c=>`
-    <div class="card chara-card ${c.id===state.chara?'active':''}" style="--c:${c.color}" data-id="${c.id}">
+    <div class="card chara-card ${c.id===state.chara?'active':''}" style="--c:${colorFor(c.id)}" data-id="${c.id}">
       <div class="avatar">${c.mark}</div>
       <div class="name">${c.name}</div>
       <div class="desc">${c.desc}</div>
@@ -324,6 +387,7 @@ function renderCharas(){
     card.onclick=()=>{ state.chara=card.dataset.id; state.mode=selectedChara().mode; store.set("state",state); renderCharas(); renderModes(); applyPreset(false); };
   });
   $("selectedName").textContent = selectedChara().name;
+  $("selectedName").style.color = activeColor();
 }
 
 function renderModes(){
@@ -492,6 +556,77 @@ function renderHistory(){
   });
 }
 function escapeHtml(s){ return String(s||"").replace(/[&<>"]/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m])); }
+
+
+function openSettingsDrawer(){
+  loadSettings();
+  renderColorSettings();
+  $("settingsDrawer").classList.add("show");
+}
+function bindColorControls(){
+  const need=['colorCharaSelect','colorR','colorG','colorB','colorHex','applyHex','resetColor','saveColor'];
+  if(!need.every(id=>$(id))) return;
+  $("colorCharaSelect").onchange = ()=>{
+    const id=$("colorCharaSelect").value;
+    colorDraft = colorFor(id);
+    updateColorControls(colorDraft);
+  };
+  ['colorR','colorG','colorB'].forEach(id=>{
+    $(id).addEventListener('input',()=>{
+      colorDraft = rgbToHex($("colorR").value,$("colorG").value,$("colorB").value);
+      updateColorControls(colorDraft, true);
+    });
+  });
+  $("applyHex").onclick = ()=>{
+    const hex=normalizeHex($("colorHex").value);
+    if(!hex){ toast('HEXは #8ec8e8 の形で入れてね'); return; }
+    colorDraft=hex; updateColorControls(colorDraft);
+  };
+  $("resetColor").onclick = ()=>{
+    const id=$("colorCharaSelect").value;
+    delete customColors[id];
+    store.set('colors', customColors);
+    colorDraft = defaultColor(id);
+    updateColorControls(colorDraft);
+    renderCharas();
+    toast('標準カラーに戻しました');
+  };
+  $("saveColor").onclick = ()=>{
+    const id=$("colorCharaSelect").value;
+    const hex=normalizeHex(colorDraft);
+    if(!hex){ toast('色を確認してね'); return; }
+    customColors[id]=hex;
+    store.set('colors', customColors);
+    renderCharas();
+    updateColorControls(hex);
+    toast('キャラカラーを保存しました');
+  };
+}
+function renderColorSettings(){
+  if(!$("colorCharaSelect")) return;
+  const current = $("colorCharaSelect").value || state.chara;
+  $("colorCharaSelect").innerHTML = CHARAS.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  $("colorCharaSelect").value = CHARAS.some(c=>c.id===current) ? current : state.chara;
+  colorDraft = colorFor($("colorCharaSelect").value);
+  $("colorPalette").innerHTML = PRESET_COLORS.map(c=>`<button class="color-dot" type="button" data-color="${c}" style="--pick:${c}" aria-label="${c}"></button>`).join('');
+  $("colorPalette").querySelectorAll('.color-dot').forEach(btn=>{
+    btn.onclick=()=>{ colorDraft=btn.dataset.color; updateColorControls(colorDraft); };
+  });
+  updateColorControls(colorDraft);
+}
+function updateColorControls(hex, fromSliders=false){
+  hex = normalizeHex(hex) || '#8ec8e8';
+  colorDraft = hex;
+  const rgb = hexToRgb(hex);
+  if(!fromSliders){ $("colorR").value=rgb.r; $("colorG").value=rgb.g; $("colorB").value=rgb.b; }
+  $("colorROut").textContent=rgb.r; $("colorGOut").textContent=rgb.g; $("colorBOut").textContent=rgb.b;
+  $("colorHex").value=hex;
+  const target = CHARAS.find(c=>c.id===$("colorCharaSelect").value) || selectedChara();
+  $("colorPreviewName").textContent = target.name;
+  $("colorPreviewHex").textContent = hex;
+  $("colorPreview").style.setProperty('--pick', hex);
+  $("colorPalette").querySelectorAll('.color-dot').forEach(btn=>btn.classList.toggle('active', btn.dataset.color.toLowerCase()===hex.toLowerCase()));
+}
 
 function loadSettings(){
   const s = store.get("settings", {workerUrl:"",accessKey:"",fileName:"voice-lab.wav"});
